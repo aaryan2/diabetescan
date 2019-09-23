@@ -1,15 +1,16 @@
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
-%matplotlib inline
+import pandas as pd
 
 file="C:\\Users\\user\\pima-indians-diabetes-database.zip"
-diabetes=pd.read_csv(file)
+
+diabetes = pd.read_csv(file)
 diabetes.replace(0, diabetes.replace([0], [None]))
 diabetes.head(5)
 diabetes.columns
 normalize = ['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI', 'DiabetesPedigreeFunction']
-diabetes[normalize]=diabetes[normalize].apply(lambda x:(x-x.min())/(x.max())-x.min())
+diabetes[normalize] = diabetes[normalize].apply(lambda x:(x-x.min())/(x.max())-x.min())
 nump = tf.feature_column.numeric_column('Pregnancies')
 glucval = tf.feature_column.numeric_column('Glucose')
 bp = tf.feature_column.numeric_column('BloodPressure')
@@ -27,15 +28,15 @@ labels = diabetes['Outcome']
 
 test_size = 0.037
 seed = 89
-X=x_data
-Y=labels
+X = x_data
+Y = labels
 X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y,test_size=test_size, random_state=seed)
 input_func=tf.estimator.inputs.pandas_input_fn(x=X_train,y=y_train
                                            ,batch_size=5
                                             ,num_epochs= 1250
                                            ,shuffle=True)
-                                 
-age_buckets = tf.feature_column.bucketized_column(ageval, boundaries=[20,30,40,50,60,70,80])                                         
+
+age_buckets = tf.feature_column.bucketized_column(ageval, boundaries=[20,30,40,50,60,70,80])
 feat_cols = ([nump,glucval,bp,intsk,insulinval,bmival,dbf,age_buckets])
 model=tf.estimator.LinearClassifier(feature_columns=feat_cols,n_classes=2)
 model.train(input_fn=input_func,steps=1250)
