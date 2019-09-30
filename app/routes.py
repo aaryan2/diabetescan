@@ -1,4 +1,5 @@
 from app import application as app
+from app import model
 from flask import render_template, Response, redirect
 USER="user"
 PASS="pass"
@@ -43,6 +44,12 @@ def api(function):
 #
 
 @api
-def update(*args):
-    dbg_print("inside update", args)
-    return "<h1>{}</h1>".format(args)
+def predict(*args):
+    try:
+        result = app.model.model.predict([args['pregnancies'], args['glucose'],
+                                args['bloodPressure'], args['skinThickness'],
+                                args['insulin'], args['BMI'],
+                                args['pedigreeFunc'], args['age']])
+        return ("<h1>{}</h1>".format(result))
+    except:
+        print("PROBLEMS, PROBLEMS")

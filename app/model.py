@@ -3,12 +3,12 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import pandas as pd
 
-file="C:\\Users\\user\\pima-indians-diabetes-database.zip"
+file="../pimaindiansdiabetescsv.zip"
 
 diabetes = pd.read_csv(file)
-diabetes.replace(0, diabetes.replace([0], [None]))
+diabetes.replace(0, diabetes.replace([0], [None]))# This is causing problems
 diabetes.head(5)
-diabetes.columns
+print(diabetes.columns)
 normalize = ['Pregnancies','Glucose','BloodPressure','SkinThickness','Insulin','BMI', 'DiabetesPedigreeFunction']
 diabetes[normalize] = diabetes[normalize].apply(lambda x:(x-x.min())/(x.max())-x.min())
 nump = tf.feature_column.numeric_column('Pregnancies')
@@ -38,5 +38,5 @@ input_func=tf.estimator.inputs.pandas_input_fn(x=X_train,y=y_train
 
 age_buckets = tf.feature_column.bucketized_column(ageval, boundaries=[20,30,40,50,60,70,80])
 feat_cols = ([nump,glucval,bp,intsk,insulinval,bmival,dbf,age_buckets])
-model=tf.estimator.LinearClassifier(feature_columns=feat_cols,n_classes=2)
-model.train(input_fn=input_func,steps=1250)
+model = tf.estimator.LinearClassifier(feature_columns=feat_cols, n_classes=2)
+model.train(input_fn=input_func, steps=1250)
