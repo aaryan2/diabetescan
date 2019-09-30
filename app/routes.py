@@ -46,10 +46,7 @@ def api(function):
 @api
 def predict(*args):
     try:
-        result = app.model.model.predict([args['pregnancies'], args['glucose'],
-                                args['bloodPressure'], args['skinThickness'],
-                                args['insulin'], args['BMI'],
-                                args['pedigreeFunc'], args['age']])
+        result = app.model.model.predict(*args)
         return ("<h1>{}</h1>".format(result))
     except:
         print("PROBLEMS, PROBLEMS")
